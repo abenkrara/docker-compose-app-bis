@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # Parte 2: Base de datos MySQL
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: prueba
+    volumes:
+      - datos_mysql:/var/lib/mysql
+
+  # Parte 4: Frontend (Adminer para gestionar la BD)
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+
+  # Parte 3: Backend (Node.js)
+  backend:
+    image: node:18
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    command: "node app.js"
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASS: root
+      DB_NAME: prueba
+
+volumes:
+  datos_mysql:
